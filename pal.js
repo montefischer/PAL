@@ -40,7 +40,7 @@ converter.on("end_parsed", function(jsonArray){
     for (var j = 0; j < mentors.length; j++) {
       if (coeffarr[i][j] === maxCoeff && orderedMentors.indexOf(mentors[j]) == -1) {
         // Uncomment this line if you want to see the similarity coefficients
-        // console.log(mentees[i].Lname + " " + mentors[j].Lname + " " + maxCoeff);
+        // console.log(mentees[i]["Last Name"] + " " + mentors[j]["Last Name"] + " " + maxCoeff);
         orderedMentors.push(mentors[j]);
         break;
       }
@@ -50,16 +50,16 @@ converter.on("end_parsed", function(jsonArray){
   // Spew the list of mentees out in .csv format
   console.log("MENTEES");
   for(var i = 0; i < mentees.length; i++) {
-    console.log(mentees[i].Fname + "," + mentees[i].Lname + "," + mentees[i].Major +
-    "," + mentees[i].Major2 + "," + mentees[i].Minor2 + "," + mentees[i].PP + "," +
+    console.log(mentees[i]["Preferred Name"] + "," + mentees[i]["Last Name"] + "," + mentees[i]["Major"] +
+    "," + mentees[i]["Second Major"] + "," + mentees[i]["2nd Minor"] + "," + mentees[i].PP + "," +
     mentees[i].Email + "," + mentees[i].Personality);
   }
 
   // Spew the list of mentors out in .csv format
   console.log("MENTORS");
   for(var i = 0; i < orderedMentors.length; i++) {
-    console.log(orderedMentors[i].Fname + "," + orderedMentors[i].Lname + "," +
-    orderedMentors[i].Major + "," + orderedMentors[i].Major2 + "," + orderedMentors[i].Minor2 + "," +
+    console.log(orderedMentors[i]["Preferred Name"] + "," + orderedMentors[i]["Last Name"] + "," +
+    orderedMentors[i]["Major"] + "," + orderedMentors[i]["Second Major"] + "," + orderedMentors[i]["2nd Minor"] + "," +
     orderedMentors[i].PP + "," + orderedMentors[i].Email + "," + orderedMentors[i].Personality);
   }
 });
@@ -89,22 +89,22 @@ function assigncoeffarr(mentors, mentees, coeffarr) {
       var majorbinmatch = false;
       for(var bin in binBin) {
         // this could be simplified but I'm too tired. Sorry.
-        if(bin.indexOf(mentees[i].Major) != -1 && bin.indexOf(mentors[j].Major) != -1) {
+        if(bin.indexOf(mentees[i]["Major"]) != -1 && bin.indexOf(mentors[j]["Major"]) != -1) {
           majorbinmatch = true;
           break;
         }
 
-        if(bin.indexOf(mentees[i].Major2) != -1 && bin.indexOf(mentors[j].Major) != -1) {
+        if(bin.indexOf(mentees[i]["Second Major"]) != -1 && bin.indexOf(mentors[j]["Major"]) != -1) {
           majorbinmatch = true;
           break;
         }
 
-        if(bin.indexOf(mentees[i].Major) != -1 && bin.indexOf(mentors[j].Major2) != -1) {
+        if(bin.indexOf(mentees[i]["Major"]) != -1 && bin.indexOf(mentors[j]["Second Major"]) != -1) {
           majorbinmatch = true;
           break;
         }
 
-        if(bin.indexOf(mentees[i].Major2) != -1 && bin.indexOf(mentors[j].Major2) != -1) {
+        if(bin.indexOf(mentees[i]["Second Major"]) != -1 && bin.indexOf(mentors[j]["Second Major"]) != -1) {
           majorbinmatch = true;
           break;
         }
@@ -114,14 +114,14 @@ function assigncoeffarr(mentors, mentees, coeffarr) {
       }
 
 			// Major or 2nd Major direct match -> +4 pts
-			if(([mentees[i].Major, mentees[i].Major2].indexOf(mentors[j].Major) != -1 ) ||
-       ([mentees[i].Major, mentees[i].Major2].indexOf(mentors[j].Major2) != -1 && mentors[j].Major2 != '')) {
+			if(([mentees[i]["Major"], mentees[i]["Second Major"]].indexOf(mentors[j]["Major"]) != -1 ) ||
+       ([mentees[i]["Major"], mentees[i]["Second Major"]].indexOf(mentors[j]["Second Major"]) != -1 && mentors[j]["Second Major"] != '')) {
 				simcoeff += 4;
 			}
 
 			// Minor or 2nd Minor direct match -> +2 pts
-			if(([mentees[i].Minor, mentees[i].Minor2].indexOf(mentors[j].Minor) != -1 ) ||
-       ([mentees[i].Minor, mentees[i].Minor2].indexOf(mentors[j].Minor2) != -1 && mentors[j].Minor2 != '')) {
+			if(([mentees[i].Minor, mentees[i]["2nd Minor"]].indexOf(mentors[j].Minor) != -1 ) ||
+       ([mentees[i].Minor, mentees[i]["2nd Minor"]].indexOf(mentors[j]["2nd Minor"]) != -1 && mentors[j]["2nd Minor"] != '')) {
 				simcoeff += 2;
 			}
 
