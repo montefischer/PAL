@@ -10,7 +10,7 @@ converter.on("end_parsed", function(jsonArray){
     var mentors = [];
     var mentees = [];
     for(var i = 0; i < jsonArray.length; i++){
-        if(jsonArray[i]["I\'m applying as a"] === "Mentor"){
+        if(jsonArray[i]["I\'m applying as a"] == "Mentor"){
             mentors.push(jsonArray[i]);
         }else{
             mentees.push(jsonArray[i]);
