@@ -62,7 +62,7 @@ def find_categories(row, label):
 measured_attributes = ['timestamp', 'email', 'first_name', 'last_name', 'majors', 'minors', 'professional', 'phone', 'year', 'type', 'double_dawgs', 'fun_question']
 
 # read in data
-form_responses = pd.read_csv('pal_responses.csv', delimiter=',', header=0, names=measured_attributes)
+form_responses = pd.read_csv('data/pal_responses.csv', delimiter=',', header=0, names=measured_attributes)
 form_responses.sort_values(by='timestamp', inplace=True)
 # drop all but the latest response of an individual
 form_responses.drop_duplicates(['first_name', 'last_name'], keep='last', inplace=True)
@@ -114,9 +114,20 @@ for mentee_index, mentee_row in mentees.iterrows():
 print(match_matrix)
 
 mentee_matches, mentor_matches = linear_sum_assignment(match_matrix)
+
 print(len(mentee_matches), len(mentor_matches))
-print(mentee_matches)
-print(mentor_matches)
+
+matched_mentees = mentees.iloc[mentee_matches].reset_index(drop=True)
+matched_mentors = mentors.iloc[mentor_matches].reset_index(drop=True)
+
+ix = [i for i in mentees.index if i not in mentee_matches]
+unmatched_mentees = mentees.loc[ix].reset_index(drop=True)
+unmatched_mentees.to_csv(path_or_buf='unmatched_mentees.csv', index=False)
+print('# unmatched mentees:')
+print(len(unmatched_mentees))
+
+matches = matched_mentees.join(matched_mentors, lsuffix='_mentee', rsuffix='_mentor')
+matches.to_csv(path_or_buf='matches.csv', index=False)
 
 def summarize_data():
     print('Mentors:', len(mentors))
